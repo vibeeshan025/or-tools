@@ -157,9 +157,19 @@ else
 #this is to make sure the archive tests don't use the root libraries
 	$(RENAME) lib lib2
 	$(TAR) -xvf $< -C $(TEMP_TEST_DIR)
-	( cd $(TEMP_TEST_DIR)$S$(INSTALL_DIR) && $(MAKE) MAKEFLAGS= all ) && \
-$(RENAME) lib2 lib && echo "archive test succeeded" || \
-( $(RENAME) lib2 lib && echo "archive test failed" && exit 1)
+	( cd $(TEMP_TEST_DIR)$S$(INSTALL_DIR) \
+    && $(MAKE) MAKEFLAGS= rcc_linear_programming \
+    && $(MAKE) MAKEFLAGS= rcc_integer_programming \
+    && $(MAKE) MAKEFLAGS= rcc_constraint_programming \
+    && $(MAKE) MAKEFLAGS= rcc_cvrp \
+    && $(MAKE) MAKEFLAGS= rcc_bin_packing \
+    && $(MAKE) MAKEFLAGS= rcc_min_flow \
+    && $(MAKE) MAKEFLAGS= rcc_max_flow \
+    && $(MAKE) MAKEFLAGS= rcc_assignment \
+    && $(MAKE) MAKEFLAGS= rcc_scheduling \
+  ) \
+	&& $(RENAME) lib2 lib && echo "archive test succeeded" \
+	|| ( $(RENAME) lib2 lib && echo "archive test failed" && exit 1)
 endif
 
 TEMP_FZ_TEST_DIR = temp_fz_test
